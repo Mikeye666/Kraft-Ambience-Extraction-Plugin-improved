@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 118.0, 116.0, 640.0, 480.0 ],
+		"rect" : [ 209.0, 149.0, 640.0, 480.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -38,6 +38,31 @@
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-11",
+					"maxclass" : "spectroscope~",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 266.0, 553.0, 300.0, 100.0 ],
+					"presentation_rect" : [ 276.0, 437.5, 0.0, 0.0 ],
+					"style" : ""
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-10",
+					"maxclass" : "spectroscope~",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 266.0, 438.5, 300.0, 100.0 ],
+					"style" : ""
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-3",
 					"maxclass" : "ezadc~",
 					"numinlets" : 1,
@@ -61,7 +86,7 @@
 					"numoutlets" : 3,
 					"outlettype" : [ "", "", "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 182.5, 442.5, 20.0, 20.0 ],
+					"patching_rect" : [ 186.571426, 562.5, 20.0, 20.0 ],
 					"rounded" : 60.0,
 					"style" : "",
 					"text" : "3",
@@ -78,7 +103,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 71.0, 442.5, 109.0, 25.0 ],
+					"patching_rect" : [ 75.071426, 562.5, 109.0, 25.0 ],
 					"style" : "",
 					"text" : "turn on audio"
 				}
@@ -91,7 +116,7 @@
 					"maxclass" : "ezdac~",
 					"numinlets" : 2,
 					"numoutlets" : 0,
-					"patching_rect" : [ 28.571428, 433.0, 44.0, 44.0 ],
+					"patching_rect" : [ 28.571428, 553.0, 44.0, 44.0 ],
 					"style" : ""
 				}
 
@@ -103,7 +128,7 @@
 					"maxclass" : "panel",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 25.0, 433.0, 44.0, 44.0 ],
+					"patching_rect" : [ 28.571428, 553.0, 44.0, 44.0 ],
 					"style" : ""
 				}
 
@@ -151,14 +176,14 @@
 						"snapshot" : 						{
 							"pluginname" : "Kraft_Ambience_Extractor.vst",
 							"plugindisplayname" : "Kraft_Ambience_Extractor",
-							"pluginsavedname" : "~/Documents/NYU Courseworks/Thesis/matlab code/Ambient Extractor (Kraft and Zolzer) /Audio Plugin Generate Test/Kraft_Ambience_Extractor.vst",
+							"pluginsavedname" : "~/Documents/NYU Courseworks/Thesis/matlab code/Ambient Extractor (Kraft and Zolzer) /Kraft Ambience Extraction Plugin improved/Kraft_Ambience_Extractor.vst",
 							"pluginsaveduniqueid" : 0,
 							"version" : 1,
 							"isbank" : 0,
 							"isbase64" : 1,
-							"sliderorder" : [ 0, 1, 2, 3 ],
-							"slidervisibility" : [ 1, 1, 1, 1 ],
-							"blob" : "72.CMlaKA....fQ3MzZ....AzzUgAG....Y....D.....................................vO.B..+TfS2+iK7K7O.B.."
+							"sliderorder" : [ 0, 1, 2 ],
+							"slidervisibility" : [ 1, 1, 1 ],
+							"blob" : "68.CMlaKA....fQ3MzZ....AzzUgAG....Y....C.....................................vO.B..+....7S.9o."
 						}
 ,
 						"snapshotlist" : 						{
@@ -175,14 +200,14 @@
 									"snapshot" : 									{
 										"pluginname" : "Kraft_Ambience_Extractor.vst",
 										"plugindisplayname" : "Kraft_Ambience_Extractor",
-										"pluginsavedname" : "~/Documents/NYU Courseworks/Thesis/matlab code/Ambient Extractor (Kraft and Zolzer) /Audio Plugin Generate Test/Kraft_Ambience_Extractor.vst",
+										"pluginsavedname" : "~/Documents/NYU Courseworks/Thesis/matlab code/Ambient Extractor (Kraft and Zolzer) /Kraft Ambience Extraction Plugin improved/Kraft_Ambience_Extractor.vst",
 										"pluginsaveduniqueid" : 0,
 										"version" : 1,
 										"isbank" : 0,
 										"isbase64" : 1,
-										"sliderorder" : [ 0, 1, 2, 3 ],
-										"slidervisibility" : [ 1, 1, 1, 1 ],
-										"blob" : "72.CMlaKA....fQ3MzZ....AzzUgAG....Y....D.....................................vO.B..+TfS2+iK7K7O.B.."
+										"sliderorder" : [ 0, 1, 2 ],
+										"slidervisibility" : [ 1, 1, 1 ],
+										"blob" : "68.CMlaKA....fQ3MzZ....AzzUgAG....Y....C.....................................vO.B..+....7S.9o."
 									}
 ,
 									"fileref" : 									{
@@ -542,7 +567,24 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-10", 0 ],
+					"order" : 0,
+					"source" : [ "obj-35", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-11", 0 ],
+					"order" : 0,
+					"source" : [ "obj-35", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-22", 1 ],
+					"order" : 1,
 					"source" : [ "obj-35", 1 ]
 				}
 
@@ -550,6 +592,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-22", 0 ],
+					"order" : 1,
 					"source" : [ "obj-35", 0 ]
 				}
 
