@@ -44,7 +44,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 266.0, 553.0, 300.0, 100.0 ],
-					"presentation_rect" : [ 276.0, 437.5, 0.0, 0.0 ],
 					"style" : ""
 				}
 
@@ -181,9 +180,7 @@
 							"version" : 1,
 							"isbank" : 0,
 							"isbase64" : 1,
-							"sliderorder" : [ 0, 1, 2 ],
-							"slidervisibility" : [ 1, 1, 1 ],
-							"blob" : "68.CMlaKA....fQ3MzZ....AzzUgAG....Y....C.....................................vO.B..+....7S.9o."
+							"blob" : "68.CMlaKA....fQ3MzZ....AzzUgAG....Y....C.....................................vO.B..+....7Cf..."
 						}
 ,
 						"snapshotlist" : 						{
@@ -205,9 +202,7 @@
 										"version" : 1,
 										"isbank" : 0,
 										"isbase64" : 1,
-										"sliderorder" : [ 0, 1, 2 ],
-										"slidervisibility" : [ 1, 1, 1 ],
-										"blob" : "68.CMlaKA....fQ3MzZ....AzzUgAG....Y....C.....................................vO.B..+....7S.9o."
+										"blob" : "68.CMlaKA....fQ3MzZ....AzzUgAG....Y....C.....................................vO.B..+....7Cf..."
 									}
 ,
 									"fileref" : 									{

@@ -133,14 +133,13 @@ classdef Kraft_Ambience_Extractor < audioPlugin
                    AMBINECE_SIG.*plugin.H_A_R]; 
             OUT = [OUT, OUT, OUT, OUT];
             
-            OUT(:, 1:2) = [OUT(:,1).*plugin.H_A_Fr, OUT(:,2).*plugin.H_A_Fr];
             OUT(:, 5:6) = OUT(:, 1:2);
             OUT(:, 3:4) = [OUT(:,1).*plugin.H_A_Rr, OUT(:,2).*plugin.H_A_Rr];
             OUT(:, 7:8) = OUT(:, 3:4);
             
-%             OUT(:, 1:2) = [OUT(:,1).*plugin.H_A_Lo, OUT(:,2).*plugin.H_A_Lo];
+            OUT(:, 1:2) = [OUT(:,1).*plugin.H_A_Lo, OUT(:,2).*plugin.H_A_Lo];
             OUT(:, 3:4) = [OUT(:,3).*plugin.H_A_Lo, OUT(:,4).*plugin.H_A_Lo];
-%             OUT(:, 5:6) = [OUT(:,5).*plugin.H_A_Hi, OUT(:,6).*plugin.H_A_Hi];
+            OUT(:, 5:6) = [OUT(:,5).*plugin.H_A_Hi, OUT(:,6).*plugin.H_A_Hi];
             OUT(:, 7:8) = [OUT(:,7).*plugin.H_A_Hi, OUT(:,8).*plugin.H_A_Hi];
             
             out = real(ifft(OUT, 2*plugin.windowSize));
@@ -166,12 +165,8 @@ classdef Kraft_Ambience_Extractor < audioPlugin
             RLr =(1/pi)*atan(decorrelation_strength_filter.*plugin.RS_Fr) + (1/2);
             RRr = 1.- RLr;
             
-            
             plugin.H_A_Rr = RRr.*plugin.sigmaBackFront;
             plugin.H_A_Fr = 1-plugin.H_A_Rr;
-            
-            plugin.H_A_Rr = 2*plugin.H_A_Rr;
-            plugin.H_A_Fr = 2*plugin.H_A_Fr
             
             plugin.H_A_Lo = plugin.sigmaLoHi;
             plugin.H_A_Hi = 1-plugin.H_A_Lo;
