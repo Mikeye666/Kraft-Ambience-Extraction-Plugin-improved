@@ -7,8 +7,7 @@ classdef Kraft_Ambience_Extractor < audioPlugin
         % Use this section to initialize properties that the end-user
         % interacts with.
         
-        Width = 1;
-        isAutoGain = true;
+        Width = 0.5;
         IOBufferSize;
         windowSize = 2048;
         overlapRatio = 0.75;
@@ -30,8 +29,10 @@ classdef Kraft_Ambience_Extractor < audioPlugin
         RLR;
         RS_Fr;
         sigmaLR;
-        sigmaS_fr;
-        sigmaS_LH;
+        sigmaFront;
+        sigmaBack;
+        sigmaLo;
+        sigmaHi;
         H_A_L;
         H_A_R;
         H_A_Rr;
@@ -50,12 +51,9 @@ classdef Kraft_Ambience_Extractor < audioPlugin
             audioPluginParameter('Decorrelation_Strength', ...
             'Mapping', {'lin',0, 1}), ...
             audioPluginParameter('Width', ...
-            'Mapping', {'pow', 2, 0, 4}), ...
+            'Mapping', {'lin', 0, 1}), ...
             audioPluginParameter('Output_Gain', ...
             'Mapping', {'lin', 0, 2}), ...
-            audioPluginParameter(...
-                'isAutoGain',...
-                'DisplayName','Auto output gain'), ...
             'InputChannels',2, ...
             'OutputChannels',8, ...
             'PluginName','Kraft Ambience Extractor (2 in / 8 out)');
@@ -72,12 +70,14 @@ classdef Kraft_Ambience_Extractor < audioPlugin
             
             plugin.RLR = 2*rand(plugin.windowSize,1)-1;
             plugin.RS_Fr = 2*rand(plugin.windowSize,1)-1;
-            sigmas = coder.load('kraftFilterDataSigma.dat');
+            sigmas = coder.load('kraftFilterDataSigma_improved.dat');
             plugin.sigmaLR = sigmas(:,1);
-            plugin.sigmaS_fr = sigmas(:,2);
-            plugin.sigmaS_LH = sigmas(:,3);
+            plugin.sigmaBack = sigmas(:,2);
+            plugin.sigmaFront = sigmas(:,3);
+            plugin.sigmaLo = sigmas(:,4);
+            plugin.sigmaHi = sigmas(:,5);
 
-            initializeKraftFilters(plugin);
+            initializeFilters(plugin);
         end
         
         function out = process(plugin,in)
@@ -96,6 +96,7 @@ classdef Kraft_Ambience_Extractor < audioPlugin
             out = plugin.outputBuffer(1:plugin.hopSize,:);
             plugin.outputBuffer = [plugin.outputBuffer(plugin.hopSize+1:end,:); zeros(size(in,1),plugin.outputChanNum)];
             
+            % mid-side processing
             out(:,1:2) = midSideProcessing(plugin, out(:,1:2));
             out(:,3:4) = midSideProcessing(plugin, out(:,3:4));
             out(:,5:6) = midSideProcessing(plugin, out(:,5:6));
@@ -113,20 +114,15 @@ classdef Kraft_Ambience_Extractor < audioPlugin
             % parameters are updated automatically. Use the set method to
             % execute more complicated instructions.
             plugin.Decorrelation_Strength = val;
-            initializeKraftFilters(plugin);
+            initializeFilters(plugin);
         end
         
         function out = midSideProcessing(plugin, in)
             mid = (in(:,1) + in(:,2)) / 2;
             side = (in(:,1) - in(:,2)) / 2;
-            side = side * plugin.Width;
+            mid = mid * (1-plugin.Width)* 2;
+            side = side * plugin.Width * 2;
             out = [mid + side, mid-side];
-            if plugin.isAutoGain
-                complementryGain = 1/(0.5+0.5*plugin.Width);
-            else
-                complementryGain = 1;
-            end
-            out = out*complementryGain;
         end
         
         function out = Kraft_ambience_extraction(plugin, in)
@@ -141,15 +137,15 @@ classdef Kraft_Ambience_Extractor < audioPlugin
                    AMBINECE_SIG.*plugin.H_A_R]; 
             OUT = [OUT, OUT, OUT, OUT];
             
-            OUT(:, 1:2) = [OUT(:,1).*plugin.H_A_Fr, OUT(:,2).*plugin.H_A_Fr];
-            OUT(:, 5:6) = OUT(:, 1:2);
-            OUT(:, 3:4) = [OUT(:,1).*plugin.H_A_Rr, OUT(:,2).*plugin.H_A_Rr];
-            OUT(:, 7:8) = OUT(:, 3:4);
-            
-            OUT(:, 1:2) = [OUT(:,1).*plugin.H_A_Lo, OUT(:,2).*plugin.H_A_Lo];
-            OUT(:, 3:4) = [OUT(:,3).*plugin.H_A_Lo, OUT(:,4).*plugin.H_A_Lo];
-            OUT(:, 5:6) = [OUT(:,5).*plugin.H_A_Hi, OUT(:,6).*plugin.H_A_Hi];
-            OUT(:, 7:8) = [OUT(:,7).*plugin.H_A_Hi, OUT(:,8).*plugin.H_A_Hi];
+%             OUT(:, 1:2) = [OUT(:,1).*plugin.H_A_Fr, OUT(:,2).*plugin.H_A_Fr];
+%             OUT(:, 5:6) = OUT(:, 1:2);
+%             OUT(:, 3:4) = [OUT(:,1).*plugin.H_A_Rr, OUT(:,2).*plugin.H_A_Rr];
+%             OUT(:, 7:8) = OUT(:, 3:4);
+%             
+%             OUT(:, 1:2) = [OUT(:,1).*plugin.H_A_Lo, OUT(:,2).*plugin.H_A_Lo];
+%             OUT(:, 3:4) = [OUT(:,3).*plugin.H_A_Lo, OUT(:,4).*plugin.H_A_Lo];
+%             OUT(:, 5:6) = [OUT(:,5).*plugin.H_A_Hi, OUT(:,6).*plugin.H_A_Hi];
+%             OUT(:, 7:8) = [OUT(:,7).*plugin.H_A_Hi, OUT(:,8).*plugin.H_A_Hi];
             
             out = real(ifft(OUT, 2*plugin.windowSize));
             out = out(1:plugin.windowSize, :);
@@ -161,7 +157,7 @@ classdef Kraft_Ambience_Extractor < audioPlugin
             plugin.outputBuffer = zeros(plugin.windowSize, plugin.outputChanNum);
         end
         
-        function initializeKraftFilters(plugin)
+        function initializeFilters(plugin)
             decorrelation_strength_filter = plugin.sigmaLR*plugin.Decorrelation_Strength;
 
             RL =(1/pi)*atan(decorrelation_strength_filter.*plugin.RLR) + (1/2);
@@ -174,11 +170,15 @@ classdef Kraft_Ambience_Extractor < audioPlugin
             RLr =(1/pi)*atan(decorrelation_strength_filter.*plugin.RS_Fr) + (1/2);
             RRr = 1.- RLr;
             
-            plugin.H_A_Rr = RRr.*plugin.sigmaS_fr;
-            plugin.H_A_Fr = 1-plugin.H_A_Rr;
+%             plugin.H_A_Rr = RRr.*plugin.sigmaS_fr;
+%             plugin.H_A_Fr = 1-plugin.H_A_Rr;
+            plugin.H_A_Rr = RRr.*plugin.sigmaBack;
+            plugin.H_A_Fr = (1-RRr).*plugin.sigmaFront;
             
-            plugin.H_A_Lo = plugin.sigmaS_LH;
-            plugin.H_A_Hi = 1-plugin.H_A_Lo;
+%             plugin.H_A_Lo = plugin.sigmaS_LH;
+%             plugin.H_A_Hi = 1-plugin.H_A_Lo;
+            plugin.H_A_Lo = plugin.sigmaLo;
+            plugin.H_A_Hi = plugin.sigmaHi;
         end
     end
 end

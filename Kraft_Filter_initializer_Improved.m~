@@ -47,4 +47,4 @@ H_A_Lo = S_Lo;
 H_A_Hi = S_Hi;
 
 sigmas = [sigmaLR, S_Back, S_Front, S_Lo, S_Hi];
-save kraftFilterDataSigma_improved.dat sigmas -ascii;
+save kraftFilterDataSigma_.dat sigmas -ascii;

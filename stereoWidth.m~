@@ -1,6 +1,6 @@
 classdef stereoWidth < audioPlugin
     properties
-        Width = 0.5;
+        Width = 1;
         isAutoGain = true;
     end
     
@@ -8,14 +8,13 @@ classdef stereoWidth < audioPlugin
         PluginInterface = ...
             audioPluginInterface(...
             audioPluginParameter('Width', ...
-            'Mapping', {'lin' 0, 1}));
+            'Mapping', {'lin', 2, 0, 4}), ...
     end
     
     methods
         function out = process(plugin, in)
             out = midSideProcessing(plugin, in);
         end
-        
         function out = midSideProcessing(plugin, in)
             mid = (in(:,1) + in(:,2)) / 2;
             side = (in(:,1) - in(:,2)) / 2;
@@ -24,6 +23,4 @@ classdef stereoWidth < audioPlugin
             out = [mid + side, mid-side];
         end
     end
-    
-
 end
